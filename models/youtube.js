@@ -55,7 +55,7 @@ function YouTube(){
                 {
                     title: video_info.title,
                     description: video_info.description,
-                    url: 'https://youtube.com/watch?v='+video_info.resourceId.videoId,
+                    video_id: video_info.resourceId.videoId,
                     thumb: video_info.thumbnails.medium.url
                 }
             }
