@@ -2,7 +2,6 @@ var express = require('express');
 var bodyparser = require('body-parser');
 var cookieparser = require('cookie-parser');
 
-var config = require('./config');
 var routes = require('./routes');
 
 
@@ -23,8 +22,6 @@ let allowCrossDomain = function(req, res, next) {
 app.use(allowCrossDomain);
 routes.configure(app);
 
-let server = app.listen(config.server_port, config.server_ip_address, function() {
-  console.log('Server active, listening on port ' + server.address().port + '.');
-});
 
-module.exports = server
+
+module.exports = app
