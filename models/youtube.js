@@ -2,8 +2,10 @@ const request = require("request");
 const config = require('../config');
 
 function YouTube(){
+    // Youtube API URL composer.
     let yt_api_auth = function(url){return "https://www.googleapis.com/youtube/v3/"+url+"&key="+config.youtube_api_key;}
 
+    // Search anything through YouTube API.
     this.search = function(query, maxResults=1, type='channel', part='snippet'){
         return new Promise((resolve, reject) => {
             request(yt_api_auth("search?maxResults="+maxResults+"&part="+part+"&q="+query+"&type="+type), function(error, response, body){
@@ -14,6 +16,7 @@ function YouTube(){
         });
     }
 
+    // Search a single YouTube channel by channel nickname (uses search method with custom parameters).
     this.get_id_from_nickname = function(nickname){
         return new Promise((resolve, reject) => {
             this.search(nickname,1,'channel','snippet').then(parsed_body => {
@@ -27,6 +30,7 @@ function YouTube(){
         });
     }
 
+    // Get YouTube channel uploads from YouTube channel ID.
     this.fetch_channel_uploads = function(channel_id, number_results = 5){
         return new Promise((resolve, reject) => {
             request(yt_api_auth("channels?part=contentDetails&id="+channel_id), function(error, response, body) {

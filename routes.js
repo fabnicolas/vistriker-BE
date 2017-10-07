@@ -3,10 +3,12 @@ var config = require('./config');
  
 module.exports = {
     configure: function(app) {
+        // Index of web server (for testing).
         app.get('/', function(req, res) {
 		    res.end('No index provided.');
         });
         
+        // Get channel videos by channel nickname.
         app.get('/get_videos/:nickname', function(req, res){
             let nickname=req.params.nickname;
             youtube.get_id_from_nickname(nickname).then(channel_id => {
@@ -21,10 +23,22 @@ module.exports = {
                                 thumbnail: video_info[k].thumb,
                             }
                         }
-                        res.send(new_arr)
+                        res.send(new_arr);
                     }).catch(error => {console.log("Promise error: "+error)});
                 }).catch(error => {console.log("Promise error: "+error)});
             }).catch(error => {console.log("Promise error: "+error)});
+        });
+
+        // Get channel similar names by channel input query.
+        app.get('/search/channel/:nickname_query', function(req, res){
+            let query=req.params.nickname_query;
+            var list=[];
+            youtube.search(query,10,'channel').then(list_channels => {
+                for(let k in list_channels.items){
+                    list[k]=list_channels.items[k].snippet.title;
+                }
+                res.send({status: 0, message: list});
+            });
         });
     }
 };
